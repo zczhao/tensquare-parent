@@ -1,0 +1,28 @@
+GET   http://localhost:9001/label/
+POST  http://localhost:9001/label/
+{
+	"labelname": "Python",
+	"state": "1",
+	"count": 0,
+	"recommend": "1",
+	"fans": 0 
+}
+GET   http://localhost:9001/label/1187787340534386688
+PUT   http://localhost:9001/label/1187787340534386688
+{
+	"labelname": "IOS",
+	"state": "1",
+	"count": 1,
+	"recommend": "1",
+	"fans": 0 
+}
+DELETE http://localhost:9001/label/1187787340534386688
+POST   http://localhost:9001/label/search
+{
+	"labelname": "on",
+	"state": "1"
+}
+POST  http://localhost:9001/label/search/1/5
+{
+	"labelname": ""
+}

@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>zzc.springcloud</groupId>
+	<artifactId>tensquare-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging> 
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<!-- <version>2.0.4.RELEASE</version> -->
+		<version>2.1.8.RELEASE</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.outputEncoding>UTF-8</project.build.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<mysql.version>5.1.48</mysql.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Finchley.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<modules>
+		<module>tensquare-common</module>
+		<module>tensquare-base</module>
+		<module>tensquare-recruit</module>
+		<module>tensquare-qa</module>
+		<module>tensquare-article</module>
+		<module>tensquare-gathering</module>
+		<module>tensquare-spit</module>
+		<module>tensquare-search</module>
+		<module>tensquare-rabbitmq-demo</module>
+		<module>tensquare-user</module>
+		<module>tensquare-sms</module>
+		<module>tensquare-eureka</module>
+		<module>tensquare-friend</module>
+		<module>tensquare-manager</module>
+		<module>tensquare-web</module>
+		<module>tensquare-config</module>
+		<module>tensquare-swagger2</module>
+		<module>tensquare-openapi3</module>
+		<module>tensquare-smart-doc</module>
+	</modules>
+</project>

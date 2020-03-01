@@ -1,0 +1,114 @@
+1、概述
+	Spring Doc ， 一个基于OpenAPI 3规范简化了Spring Boot 1.x和2.x应用程序的API文档的生成和维护的工具。
+	
+2、设置springdoc-openapi
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-core</artifactId>
+			<version>1.1.45</version>
+		</dependency>
+	
+	添加完成后，启动应用程序，即可访问默认路径/v3/api-docs 查看文档，如下所示：
+		http://localhost:8080/v3/api-docs/
+	如果想要自定义路径，可在 application.properties 文件中指定 :
+		springdoc.api-docs.path=/api-docs
+	这样，文档的访问路径就变成 :
+		http://localhost:8080/api-docs/
+		
+3、整合springdoc-openapi 和Swagger UI
+	整合springdoc-openapi 和  Swagger UI
+	<dependency>
+	    <groupId>org.springdoc</groupId>
+	    <artifactId>springdoc-openapi-ui</artifactId>
+	    <version>1.1.45</version>
+	</dependency>
+	访问swagger-ui页面：
+		http://localhost:8080/swagger-ui.html
+	当然也可以像上面一样，自定义访问路径：
+		springdoc.swagger-ui.path=/swagger-ui-custom.html
+		
+4、springdoc-openapi 与Spring WebFlux集成
+	可以在Spring WebFlux 项目中通过添加依赖：springdoc-openapi-webflux-ui与springdoc-openapi and Swagger UI 集成：
+	<dependency>
+	    <groupId>org.springdoc</groupId>
+	    <artifactId>springdoc-openapi-webflux-ui</artifactId>
+	    <version>1.1.45</version>
+	</dependency>
+	然后，浏览器访问地址
+		http://localhost:8080/swagger-ui.html
+	同样的,可以通过添加 springdoc.swagger-ui.path 配置项到 application.properties文件来自定义文档访问路径。
+	
+5、使用springdoc-openapi Maven 插件
+	springdoc-openapi 库提供了 springdoc-openapi-maven-plugin插件，用来生成JSON或者yaml格式的Open API 描述。
+	springdoc-openapi-maven-plugin 依赖于 spring-boot-maven 插件. Maven在集成测试阶段运行openapi插件。
+	<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <version>2.1.8.RELEASE</version>
+    <executions>
+        <execution>
+            <id>pre-integration-test</id>
+            <goals>
+                <goal>start</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>post-integration-test</id>
+            <goals>
+                <goal>stop</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+<plugin>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-maven-plugin</artifactId>
+    <version>0.2</version>
+    <executions>
+        <execution>
+            <phase>integration-test</phase>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+当然, 也可以用自定义值来配置插件：
+<plugin>
+    <executions>
+        .........
+    </executions>
+    <configuration> 
+        <apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl> 
+        <outputFileName>openapi.json</outputFileName> 
+        <outputDir>${project.build.directory}</outputDir> 
+    </configuration>
+</plugin>
+仔细看看我们在插件中配置的几个参数：
+apiDocsUrl – 访问json格式文档的URL， 默认路径：http://localhost:8080/v3/api-docs
+outputFileName – 存放定义的路径, 默认为：openapi.json
+outputDir – 文档存放的绝对路径–默认为：${project.build.directory}
+
+6、使用 JSR-303 Bean Validation 自动生成文档
+在模型中使用 JSR-303 bean validation 注解, 诸如 @NotNull, @NotBlank, @Size, @Min, @Max等, springdoc-openapi 会为这些bean生成相应的约束。
+
+7、使用 @ControllerAdvice和@ResponseStatus生成文档
+	在*@RestControllerAdvice注解的类中，在方法上使用@ResponseStatus会自动生成带有返回状态码的文档。如以下被@ControllerAdvice注解的类中，@ResponseStatus*修饰的两个方法：
+	@RestControllerAdvice
+	public class GlobalControllerExceptionHandler {
+	 
+	    @ExceptionHandler(ConversionFailedException.class)
+	    @ResponseStatus(HttpStatus.BAD_REQUEST)
+	    public ResponseEntity<String> handleConnversion(RuntimeException ex) {
+	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
+	     
+	    @ExceptionHandler(BallNotFoundException.class)
+	    @ResponseStatus(HttpStatus.NOT_FOUND)
+	    public ResponseEntity<String> handleBallNotFound(RuntimeException ex) {
+	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+	    }
+	}
+	
+8、 小结
+	Spring Boot 2.2.x版本目前可能不支持，因此使用时最好使用2.1.x ，本文所使用Spring Boot版本 2.1.8.RELEASE

@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings
+*.class
+elasticsearch-analysis-ik-5.6.8.zip
+logstash-5.6.8.zip
+target
+bin

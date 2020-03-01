@@ -1,0 +1,3 @@
+主要有两块：企业信息和招聘信息
+
+GET  http://localhost:9002/enterprise/search/hotlist

@@ -1,0 +1,28 @@
+server: 
+  port: 9003
+spring: 
+  application:  
+    name: tensquare-qa
+  datasource:  
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.156.61:3306/tensquare_qa
+    username: root
+    password: 123456
+  jpa: 
+    database: mysql
+    show-sql: true
+
+jwt:
+  config:
+    key: zczhao-secret
+
+eureka:
+  instance: 
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka/
+
+feign: 
+  hystrix: 
+    enabled: true # 开启hystrix熔断器        

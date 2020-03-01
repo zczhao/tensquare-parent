@@ -1,0 +1,89 @@
+elasticsearch:5.6.8
+创建索引
+    put   http://192.168.156.61:9200/articleindex
+
+新建文档
+    post  http://192.168.156.61:9200/articleindex/article
+    {
+      "title": "SpringBoot2.0",
+      "content": "发布啦"
+    }
+
+查询文档
+    查询全部
+    get   http://192.168.156.61:9200/articleindex/article/_search
+    id查询
+    http://192.168.156.61:9200/articleindex/article/AW4IHUJ_SP0hxzcD9J_z
+    基本匹配查询
+    http://192.168.156.61:9200/articleindex/article/_search?q=content:教程
+    模糊查询
+    http://192.168.156.61:9200/articleindex/article/_search?q=title:*2*
+
+修改文档
+    PUT   http://192.168.156.61:9200/articleindex/article/AW4IHUJ_SP0hxzcD9J_z
+    {
+      "title": "SpringBoot2.0",
+      "content": "项目教程发布啦"
+    }
+
+删除文档
+    根据ID删除文档
+    DELETE   http://192.168.156.61:9200/articleindex/article/1
+
+IK分词器
+    默认分词测试地址：
+    http://192.168.156.61:9200/_analyze?analyzer=chinese&pretty=true&text=我是程序员
+    IK分词测试地址：
+    http://192.168.156.61:9200/_analyze?analyzer=ik_smart&pretty=true&text=我是程序员
+    
+-----------------------------------------------------------------------------------    
+    
+Logstash同步mysql数据到elasticsearch   
+Logstash安装与测试下载logstash-5.6.8.zip(需要安装JDK环境)
+进入bin目录：logstash -e 'input { stdin {} } output { stdout {} }'
+控制台输入字符，随后就有日志输出
+stdin：表示输入流，指从键盘输入
+stdout：表示输出流，指从显示器输出
+命令行参数：
+	-e 执行
+	--Config 或 -f配置文件，后面跟参数类型可以是一个字符串的配置或全路径文件名或全路径(如：/etc/logstash.d/，
+	logstash会自动读取/etc/logstash.d/目录下所有*.conf的文本文件，然后在自己内存里拼接成一个完整的大配置文件再去执行)
+	
+把mysqletc文件夹移动到logstash-5.6.8目录下，修改内容
+input {
+  jdbc {
+          # mysql jdbc connection string to our backup databse
+          jdbc_connection_string => "jdbc:mysql://192.168.156.61:3306/tensquare_article"
+          # the user we wish to excute our statement as
+          jdbc_user => "root"
+          jdbc_password => "123456"
+          # the path to our downloaded jdbc driver
+          jdbc_driver_library => "/root/logstash-5.6.8/mysqletc/mysql-connector-java-5.1.46.jar"
+          # the name of the driver class for mysql
+          jdbc_driver_class => "com.mysql.jdbc.Driver"
+          jdbc_paging_enabled => "true"
+          jdbc_page_size => "50"
+          #以下对应着要执行的sql的绝对路径。
+          #statement_filepath => ""
+          statement => "SELECT id, title, content, state FROM tb_article"
+          #定时字段 各字段含义（由左至右）分、时、天、月、年，全部为*默认含义为每分钟都更新（测试结果，不同的话请留言指                                                                                                                     出）
+      schedule => "* * * * *"
+  }
+}
+
+output {
+  elasticsearch {
+          #ESIP地址与端口
+          hosts => "192.168.156.61:9200"
+          #ES索引名称（自己定义的）
+          index => "tensquare_article"
+          #自增ID编号
+          document_id => "%{id}"
+          document_type => "article"
+  }
+  stdout {
+      #以JSON格式输出
+      codec => json_lines
+  }
+}
+

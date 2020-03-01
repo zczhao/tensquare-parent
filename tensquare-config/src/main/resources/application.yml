@@ -1,0 +1,21 @@
+server:
+  port: 12000
+  
+spring:
+  application:
+    name: tensquare-config
+  cloud:
+    config: 
+      server: 
+        git: 
+          uri: https://gitee.com/zczhao/tensquare-config.git
+          username: fhqfndn@gmail.com
+          password: fhqfndn7915912.
+  rabbitmq:
+    host: 192.168.156.61
+
+management: # 暴露触发消息总线的地址：http://localhost:12000/actuator/bus-refresh (POST请求)
+  endpoints: 
+    web:
+      exposure:
+        include: bus-refresh    
